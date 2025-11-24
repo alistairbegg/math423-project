@@ -8,7 +8,9 @@ mult_model <- lm(y ~ x1 + x6, data = b3)
 
 ## Q2
 a <- anova(mult_model)
-MSR <- a[1, "Mean Sq"]
-MSE <- a[nrow(a), "Mean Sq"]
-f <- MSR / MSE
-p <- pf(f, 2, df.residual(mult_model), lower.tail = FALSE)
+s <- summary(mult_model)
+f <- s$fstatistic[1]
+df1 <- s$fstatistic[2]
+df2 <- s$fstatistic[3]
+p <- pf(f, df1 = df1, df2 = df2, lower.tail = FALSE)
+
