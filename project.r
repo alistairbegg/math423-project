@@ -39,4 +39,17 @@ r2_simple <- s_simple$r.squared
 adj_r2_simple <- s_simple$adj.r.squared
 
 ## Q4
+coef(s_mult)
 
+## Q5
+confint(mult_model, "x1", level=0.95)
+
+## Q6
+coef(s_mult)
+
+## Q7
+test <- data.frame(
+  x1 = 275,
+  x6 = 2
+)
+predict(mult_model, newdata = test, interval = "confidence", level = 0.95)
