@@ -53,3 +53,7 @@ test <- data.frame(
   x6 = 2
 )
 predict(mult_model, newdata = test, interval = "confidence", level = 0.95)
+
+## Q8
+predict(mult_model, newdata = test, interval = "prediction", level = 0.95)
+
