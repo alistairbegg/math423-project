@@ -32,9 +32,11 @@ data.frame(
 ## Q3
 simple_model <- lm(y ~ x1, data = b3)
 s_simple <- summary(simple_model)
-r2_mult <- s$r.squared
-adj_r2_mult <- s$adj.r.squared
-r2_mult <- s_simple$r.squared
-adj_r2_mult <- s_simple$adj.r.squared
+s_mult <- summary(mult_model)
+r2_mult <- s_mult$r.squared
+adj_r2_mult <- s_mult$adj.r.squared
+r2_simple <- s_simple$r.squared
+adj_r2_simple <- s_simple$adj.r.squared
 
+## Q4
 
