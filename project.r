@@ -57,3 +57,20 @@ predict(mult_model, newdata = test, interval = "confidence", level = 0.95)
 ## Q8
 predict(mult_model, newdata = test, interval = "prediction", level = 0.95)
 
+## Q9
+r <- resid(mult_model)
+pr <- r/(1-lm.influence(mult_model)$hat)
+ss_res <- sum(r^2)
+press <- sum(pr^2)
+SST <- sum((b3$y - mean(b3$y))^2)
+r2_pred <- 1 - press/SST
+
+## Q10
+set.seed(1)
+half_b3 <- b3[sample(nrow(b3), 16), ]
+half_model <- lm(y ~ x1 + x6, data = half_b3)
+r_half <- resid(half_model)
+pr_half <- r_half / (1 - lm.influence(half_model)$hat)
+PRESS_half <- sum(pr_half^2)
+SST_half <- sum((half_b3$y - mean(half_b3$y))^2)
+r2_pred_half <- 1 - PRESS_half/SST_half
