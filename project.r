@@ -74,3 +74,70 @@ pr_half <- r_half / (1 - lm.influence(half_model)$hat)
 PRESS_half <- sum(pr_half^2)
 SST_half <- sum((half_b3$y - mean(half_b3$y))^2)
 r2_pred_half <- 1 - PRESS_half/SST_half
+
+## Q11
+model_stats <- function(model) {
+  
+  s      <- summary(model)
+  R2     <- s$r.squared
+  adjR2  <- s$adj.r.squared
+  AICval <- AIC(model)
+  BICval <- BIC(model)
+  
+  n        <- nobs(model)
+  p        <- length(coef(model))
+  SSE      <- sum(residuals(model)^2)
+  sigma2_f <- summary(mult_model)$sigma^2
+  
+  Cp <- SSE / sigma2_f - (n - 2 * p)
+  
+  out <- list(
+    R2     = R2,
+    adj_R2 = adjR2,
+    Cp     = Cp,
+    AIC    = AICval,
+    BIC    = BICval
+  )
+  
+  return(out)
+}
+
+model_1 <- lm(y ~ 1, data = b3)
+model_2 <- lm(y ~ x1, data = b3)
+model_3 <- lm(y ~ x6, data = b3)
+model_4 <- lm(y ~ x1 + x6, data = b3)
+models <- list(model_1, model_2, model_3, model_4)
+results <- do.call(
+  rbind,
+  lapply(models, model_stats)
+)
+
+## Q12
+cv5_lm <- function(model, data = b3, K = 5, seed = 1) {
+  set.seed(seed)
+  
+  form <- formula(model)
+  
+  n <- nrow(data)
+  folds <- sample(rep(1:K, length.out = n))
+  
+  mse <- numeric(K)
+  
+  for (k in 1:K) {
+    train_data <- data[folds != k, ]
+    test_data  <- data[folds == k, ]
+
+    fit_k <- lm(form, data = train_data)
+
+    preds <- predict(fit_k, newdata = test_data)
+    
+    mse[k] <- mean((test_data$y - preds)^2)
+  }
+
+  return(mean(mse))
+}
+
+cv_results <- data.frame(
+  Model = paste0("Model_", seq_along(models)),
+  CV_MSE = sapply(models, cv5_lm)
+)
